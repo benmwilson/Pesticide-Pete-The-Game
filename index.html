@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <!-- Import JS Files -->
+    <script type="text/javascript" src="js/game.js"></script>
+    <script type="text/javascript" src="lib/cuon-matrix.js"></script>
+    <script type="text/javascript" src="lib/cuon-utils.js"></script>
+    <script type="text/javascript" src="lib/webgl-debug.js"></script>
+    <script type="text/javascript" src="lib/webgl-utils.js"></script>
+
+    <!-- Link CSS Sheet: -->
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <title>Pesticide Pete: The Game</title>
+  </head>
+
+  <body onload="initGame();">
+    <div id="gameWrapper" class="container">
+      <canvas
+        id="gameCanvas"
+        onclick="clickHandler(event);"
+        width="500px"
+        height="500px"
+      >
+        Your browser does not appear to support HTML5.
+      </canvas>
+    </div>
+  </body>
+</html>
