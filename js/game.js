@@ -21,6 +21,9 @@ var gameLost = false; // true when game is lost
 var playerScore = 0.0; // player score
 var bacteriaOrigins = []; // store origin coords of each bacteria
 
+// create a set of colours for the pests
+var pestColours = generateBacteriaColours();
+
 function initGame() {
   let canvas = document.getElementById("gameCanvas"); // grab canvas elements 
 
@@ -186,6 +189,11 @@ function initGame() {
 
   function eradicatePests(colours){
     //TODO: Write function to delete the pest that has been clicked on
+    for(var i = 0; i < 10; i++){
+      if(colours == pestCoulours[i]){
+        vertexArray.splice(i,1,NULL); // sets the index i in vertexArray to NULL so the object isnt drawn in the render loop
+      }
+    }
   }
 
   function checkWinStatus() {
