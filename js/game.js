@@ -196,8 +196,18 @@ function initGame() {
     }
   }
 
+  //if every index in vertexArray is NULL, game is won
   function checkWinStatus() {
     // TODO: Write check to see if all bacteria on the field have been eradicated
+    var count = 0;
+    for(var i = 0; i < 10; i++){
+      if(vertexArray[i] == NULL){ 
+        count++
+      }
+    }
+    if(count == 10){
+      gameWon = TRUE;
+    }
   }
 
   function checkLossStatus() {
