@@ -151,8 +151,41 @@ function initGame() {
     // TODO: Draw the bacteria
   }
 
-  function mouseClick() {
     // TODO: Check if we click inside a bacteria
+
+    // coordinate calculations from https://github.com/davidwparker/programmingtil-webgl/blob/master/0033-reading-pixels/libs/uiUtils.js
+    function pixelInputToCanvasCoord(event, canvas) {
+      var x = event.clientX,
+        y = event.clientY,
+        rect = event.target.getBoundingClientRect();
+      x = x - rect.left;
+      y = rect.bottom - y;
+      return {x:x,y:y};
+      }
+
+    // allows for console logs to be saved to an array
+    console.stdlog = console.log.bind(console);
+      console.logs = [];
+      console.log = function(){
+          console.logs.push(Array.from(arguments));
+          console.stdlog.apply(console, arguments);
+      }
+    // Gets the colour of the pest that is clicked on and calls eradicatePests 
+    canvas.onmousedown = function(e){
+      var point = pixelInputToCanvasCoord(e,canvas);
+      
+      
+      var pixels = new Uint8Array(4);
+      gl.readPixels(point.x,point.y,1,1,gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      console.log(pixels);
+  
+      var currentColour = console.logs[console.logs.length - 1];
+      console.logs.length = 0;
+      eradicatePests(currentColour);
+    }
+
+  function eradicatePests(colours){
+    //TODO: Write function to delete the pest that has been clicked on
   }
 
   function checkWinStatus() {
