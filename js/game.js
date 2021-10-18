@@ -47,7 +47,8 @@ var bacteriaScale = 0.01; // initial bacteria size, increased each frame
 // global game states 
 var gameWon = false; // true when game is won
 var gameLost = false; // true when game is lost
-var growthRate = 0.1;
+var growthRate = 0.5;
+var lossFactor = 200; //controls how long it takes to lose
 
 // player state variables
 var playerScore = 0.0; // player score
@@ -75,12 +76,14 @@ function initGame() {
 	]
 
 	var gameArea = createCircleVertices(0, 0, (gl.canvas.height / 2) * 0.9);
-
+  
 	var scaleFactor = 10;
 
 	//Enable mouseclick
 	canvas.addEventListener("click", getColor);
 
+console.log(gl.canvas.width / 2 * 0.9);
+  
 	var loop = function () {
 		gl.clearColor(0, 0.6, 0, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
@@ -94,15 +97,15 @@ function initGame() {
 				won = false;
 		}
 
-		if(gl.canvas.width / 2 * 0.9 == scaleFactor){
-			gameLost = true;
-			gl.clear(gl.COLOR_BUFFER_BIT);
-		} else if(won){
-			gameWon == true;
-			gl.clear(gl.COLOR_BUFFER_BIT);
-		}
 
-		if (!gameWon || !gameLost) {
+    if(scaleFactor == lossFactor){
+      console.log("lost");
+			gameLost = true;
+			
+		} 
+	
+		if (!gameLost) {
+      console.log("still on");
 			drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
 
 			//Draw bacteria
