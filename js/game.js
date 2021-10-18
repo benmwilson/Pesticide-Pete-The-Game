@@ -1,6 +1,6 @@
 //Vertex and fragment shader code from 
 //https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
-	
+
 var vertexShaderText = [
 	'attribute vec2 a_position;',
 	'uniform vec2 u_resolution;',
@@ -47,21 +47,24 @@ var bacteriaScale = 0.01; // initial bacteria size, increased each frame
 // global game states 
 var gameWon = false; // true when game is won
 var gameLost = false; // true when game is lost
+var growthRate = 0.1;
 
 // player state variables
 var playerScore = 0.0; // player score
 var bacteriaOrigins = []; // store origin coords of each bacteria
 
 var bacteriaOrigins;
-var bacteriaColors;
+var bacteriaColours;
+var bacteriaActive;
 
 function initGame() {
 	initWebGLContext();
 	initialiazeShaders();
 	gl.useProgram(program);
 
-	var bacteriaOrigins = generateBacteriaOrigins(gl.canvas.height/2 * 0.9);
-	var bacteriaColors = generateBacteriaColours();
+	bacteriaOrigins = generateBacteriaOrigins(gl.canvas.height / 2 * 0.9);
+	bacteriaColors = generateBacteriaColours();
+	bacteriaActive = [true, true, true, true, true, true, true, true, true, true];
 
 	square = [
 		10, 10,
@@ -71,21 +74,46 @@ function initGame() {
 		10, 10,
 	]
 
-	var gameArea = createCircleVertices(0,0,(gl.canvas.height/2) * 0.9);
+	var gameArea = createCircleVertices(0, 0, (gl.canvas.height / 2) * 0.9);
 
 	var scaleFactor = 10;
+
+	//Enable mouseclick
+	canvas.addEventListener("click", getColor);
+
 	var loop = function () {
 		gl.clearColor(0, 0.6, 0, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
+
 		//Draw gameArea
-		drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width/2, gl.canvas.height/2], 0, [1,1], [1,1,0,1]);
-	
-		//Draw bacteria
-		for(var x = 0; x < bacteriaOrigins.length; x++){
-			vertices = createCircleVertices(0,0,1);
-			drawShape(gl.TRIANGLE_FAN, vertices, [bacteriaOrigins[x][0],bacteriaOrigins[x][1]], 0, [scaleFactor,scaleFactor], bacteriaColors[x]);
+		//drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
+
+		var won = true;
+		for(var x = 0; x < bacteriaActive.length; x++){
+			if(bacteriaActive[x])
+				won = false;
 		}
-		scaleFactor += 0.1;
+
+		if(gl.canvas.width / 2 * 0.9 == scaleFactor){
+			gameLost = true;
+			gl.clear(gl.COLOR_BUFFER_BIT);
+		} else if(won){
+			gameWon == true;
+			gl.clear(gl.COLOR_BUFFER_BIT);
+		}
+
+		if (!gameWon || !gameLost) {
+			drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
+
+			//Draw bacteria
+			for (var x = 0; x < bacteriaOrigins.length; x++) {
+				vertices = createCircleVertices(0, 0, 1);
+				if (bacteriaActive[x])
+					drawShape(gl.TRIANGLE_FAN, vertices, [bacteriaOrigins[x][0], bacteriaOrigins[x][1]], 0, [scaleFactor, scaleFactor], bacteriaColors[x]);
+			}
+			scaleFactor += growthRate;
+		}
+
 		requestAnimationFrame(loop);
 	}
 	requestAnimationFrame(loop);
@@ -94,7 +122,8 @@ function initGame() {
 
 function initWebGLContext() {
 	canvas = document.getElementById('gameCanvas');
-	gl = getWebGLContext(canvas);
+	//gl = getWebGLContext(canvas);
+	gl = canvas.getContext('webgl', { preserveDrawingBuffer: true });
 
 	if (!gl) {
 		console.log('webgl not supported, falling back on experimental-webgl');
@@ -150,9 +179,9 @@ function initialiazeShaders() {
 
 }
 
-function drawShape(type, vertices, translation, rotationDegrees, scale, color){
+function drawShape(type, vertices, translation, rotationDegrees, scale, color) {
 	//Some code referenced from https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
-	
+
 	vertices = new Float32Array(vertices);
 	var n = vertices.length / 2;
 
@@ -171,23 +200,23 @@ function drawShape(type, vertices, translation, rotationDegrees, scale, color){
 	gl.uniform4fv(colorLocation, color);
 
 	// Compute the matrices
-    var translationMatrix = m3.translation(translation[0], translation[1]);
-    var rotationMatrix = m3.rotation(rotationDegrees * (Math.PI/180));
-    var scaleMatrix = m3.scaling(scale[0], scale[1]);
+	var translationMatrix = m3.translation(translation[0], translation[1]);
+	var rotationMatrix = m3.rotation(rotationDegrees * (Math.PI / 180));
+	var scaleMatrix = m3.scaling(scale[0], scale[1]);
 
-    // make a matrix that will move the origin of the 'F' to its center.
-    var moveOriginMatrix = m3.translation(0,0);
+	// make a matrix that will move the origin of the 'F' to its center.
+	var moveOriginMatrix = m3.translation(0, 0);
 
-    // Multiply the matrices.
-    var matrix = m3.multiply(translationMatrix, rotationMatrix);
-    matrix = m3.multiply(matrix, scaleMatrix);
-    matrix = m3.multiply(matrix, moveOriginMatrix);
+	// Multiply the matrices.
+	var matrix = m3.multiply(translationMatrix, rotationMatrix);
+	matrix = m3.multiply(matrix, scaleMatrix);
+	matrix = m3.multiply(matrix, moveOriginMatrix);
 
-    // Set the matrix.
-    gl.uniformMatrix3fv(matrixLocation, false, matrix);
+	// Set the matrix.
+	gl.uniformMatrix3fv(matrixLocation, false, matrix);
 
-    // Draw the geometry.
-    gl.drawArrays(type, 0, n);
+	// Draw the geometry.
+	gl.drawArrays(type, 0, n);
 }
 
 function createCircleVertices(x, y, scale) {
@@ -204,22 +233,22 @@ function createCircleVertices(x, y, scale) {
 
 function generateBacteriaOrigins(radius) {
 	var bacteriaOrigins = [];
-	var origin = [gl.canvas.width/2, gl.canvas.height/2];
+	var origin = [gl.canvas.width / 2, gl.canvas.height / 2];
 
 	for (var i = 0; i < BACTERIA_COUNT; i++) {
 		var angle = ((Math.floor(Math.random() * 360) + 1) * Math.PI) / 180;
 		var centerX = radius * Math.cos(angle) + origin[0];
 		var centerY = radius * Math.sin(angle) + origin[1];
 		bacteriaOrigins.push([centerX, centerY]);
-		console.log("Bacteria #" + (i + 1) + " Origin: X = " + bacteriaOrigins[i][0] + ", Y = " + bacteriaOrigins[i][1]); // print indiv bacteria coord data to console
+		//console.log("Bacteria #" + (i + 1) + " Origin: X = " + bacteriaOrigins[i][0] + ", Y = " + bacteriaOrigins[i][1]); // print indiv bacteria coord data to console
 	}
 
 	return bacteriaOrigins;
 }
 
 function generateBacteriaColours() {
-	var bacteriaColours = [];
-	var max = 1.0, min = 0.1; // colour bounds
+	bacteriaColours = [];
+	var max = 1.0, min = 0; // colour bounds
 
 	for (var i = 0; i < 10; i++) {
 		var red = Math.random() * (max - 0.5) + 0.5;
@@ -233,72 +262,125 @@ function generateBacteriaColours() {
 	return bacteriaColours;
 }
 
+function pixelInputToCanvasCoord(event) {
+	var x = event.clientX,
+		y = event.clientY,
+		rect = event.target.getBoundingClientRect();
+	x = x - rect.left;
+	y = rect.bottom - y;
+	return { x: x, y: y };
+}
+
+function getColor(e) {
+	var point = pixelInputToCanvasCoord(e);
+
+	var pixels = new Uint8Array(4);
+	gl.readPixels(point.x, point.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+	// console.log("R: " + pixels[0]);
+	// console.log("G: " + pixels[1]);
+	// console.log("B: " + pixels[2]);
+	removeBacteria(pixels[0], pixels[1], pixels[2])
+}
+
+function removeBacteria(r, g, b) {
+	x = 0;
+	for (var x = 0; x < bacteriaColours.length; x++) {
+		bacR = Math.round(lerp(0, 255, bacteriaColours[x][0]));
+		bacG = Math.round(lerp(0, 255, bacteriaColours[x][1]));
+		bacB = Math.round(lerp(0, 255, bacteriaColours[x][2]));
+		// console.log("Mouse Color: (" + r + ", " + g + ", " + b + ")");
+		// console.log("Bacteria Color: (" + bacR + ", " + bacG + ", " + bacB + ")");
+		if (r == bacR && g == bacG && b == bacB) {
+			//console.log("Bacteria hit")
+			bacteriaActive[x] = false;
+		}
+	}
+}
+
+function lerp(a, b, t) {
+	return (1 - t) * a + t * b;
+}
+
 var m3 = {
 	//Matrix math code from https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
 
-	identity: function() {
-	  return [
-		1, 0, 0,
-		0, 1, 0,
-		0, 0, 1,
-	  ];
+	identity: function () {
+		return [
+			1, 0, 0,
+			0, 1, 0,
+			0, 0, 1,
+		];
 	},
-  
-	translation: function(tx, ty) {
-	  return [
-		1, 0, 0,
-		0, 1, 0,
-		tx, ty, 1,
-	  ];
+
+	translation: function (tx, ty) {
+		return [
+			1, 0, 0,
+			0, 1, 0,
+			tx, ty, 1,
+		];
 	},
-  
-	rotation: function(angleInRadians) {
-	  var c = Math.cos(angleInRadians);
-	  var s = Math.sin(angleInRadians);
-	  return [
-		c,-s, 0,
-		s, c, 0,
-		0, 0, 1,
-	  ];
+
+	rotation: function (angleInRadians) {
+		var c = Math.cos(angleInRadians);
+		var s = Math.sin(angleInRadians);
+		return [
+			c, -s, 0,
+			s, c, 0,
+			0, 0, 1,
+		];
 	},
-  
-	scaling: function(sx, sy) {
-	  return [
-		sx, 0, 0,
-		0, sy, 0,
-		0, 0, 1,
-	  ];
+
+	scaling: function (sx, sy) {
+		return [
+			sx, 0, 0,
+			0, sy, 0,
+			0, 0, 1,
+		];
 	},
-  
-	multiply: function(a, b) {
-	  var a00 = a[0 * 3 + 0];
-	  var a01 = a[0 * 3 + 1];
-	  var a02 = a[0 * 3 + 2];
-	  var a10 = a[1 * 3 + 0];
-	  var a11 = a[1 * 3 + 1];
-	  var a12 = a[1 * 3 + 2];
-	  var a20 = a[2 * 3 + 0];
-	  var a21 = a[2 * 3 + 1];
-	  var a22 = a[2 * 3 + 2];
-	  var b00 = b[0 * 3 + 0];
-	  var b01 = b[0 * 3 + 1];
-	  var b02 = b[0 * 3 + 2];
-	  var b10 = b[1 * 3 + 0];
-	  var b11 = b[1 * 3 + 1];
-	  var b12 = b[1 * 3 + 2];
-	  var b20 = b[2 * 3 + 0];
-	  var b21 = b[2 * 3 + 1];
-	  var b22 = b[2 * 3 + 2];
-	  return [
-		b00 * a00 + b01 * a10 + b02 * a20,
-		b00 * a01 + b01 * a11 + b02 * a21,
-		b00 * a02 + b01 * a12 + b02 * a22,
-		b10 * a00 + b11 * a10 + b12 * a20,
-		b10 * a01 + b11 * a11 + b12 * a21,
-		b10 * a02 + b11 * a12 + b12 * a22,
-		b20 * a00 + b21 * a10 + b22 * a20,
-		b20 * a01 + b21 * a11 + b22 * a21,
-		b20 * a02 + b21 * a12 + b22 * a22,
-	  ];
+
+	multiply: function (a, b) {
+		var a00 = a[0 * 3 + 0];
+		var a01 = a[0 * 3 + 1];
+		var a02 = a[0 * 3 + 2];
+		var a10 = a[1 * 3 + 0];
+		var a11 = a[1 * 3 + 1];
+		var a12 = a[1 * 3 + 2];
+		var a20 = a[2 * 3 + 0];
+		var a21 = a[2 * 3 + 1];
+		var a22 = a[2 * 3 + 2];
+		var b00 = b[0 * 3 + 0];
+		var b01 = b[0 * 3 + 1];
+		var b02 = b[0 * 3 + 2];
+		var b10 = b[1 * 3 + 0];
+		var b11 = b[1 * 3 + 1];
+		var b12 = b[1 * 3 + 2];
+		var b20 = b[2 * 3 + 0];
+		var b21 = b[2 * 3 + 1];
+		var b22 = b[2 * 3 + 2];
+		return [
+			b00 * a00 + b01 * a10 + b02 * a20,
+			b00 * a01 + b01 * a11 + b02 * a21,
+			b00 * a02 + b01 * a12 + b02 * a22,
+			b10 * a00 + b11 * a10 + b12 * a20,
+			b10 * a01 + b11 * a11 + b12 * a21,
+			b10 * a02 + b11 * a12 + b12 * a22,
+			b20 * a00 + b21 * a10 + b22 * a20,
+			b20 * a01 + b21 * a11 + b22 * a21,
+			b20 * a02 + b21 * a12 + b22 * a22,
+		];
 	},
 };
+
+// //if every index in vertexArray is NULL, game is won
+// function checkWinStatus() {
+// 	// TODO: Write check to see if all bacteria on the field have been eradicated
+// 	var count = 0;
+// 	for (var i = 0; i < 10; i++) {
+// 		if (vertexArray[i] == NULL) {
+// 			count++
+// 		}
+// 	}
+// 	if (count == 10) {
+// 		gameWon = TRUE;
+// 	}
+// }
