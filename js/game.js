@@ -167,6 +167,7 @@ function initGame() {
       }
 
     // allows for console logs to be saved to an array
+    // found at https://stackoverflow.com/questions/19846078/how-to-read-from-chromes-console-in-javascript
     console.stdlog = console.log.bind(console);
       console.logs = [];
       console.log = function(){
