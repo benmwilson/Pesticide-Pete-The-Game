@@ -45,8 +45,8 @@ var currentBacteriaRadius = 0.0; // radius of current bacteria
 var bacteriaScale = 0.01; // initial bacteria size, increased each frame
 
 // global game states 
-var gameWon = false; // true when game is won
-var gameLost = false; // true when game is lost
+var gameWon = true; // false when game is won
+var gameLost = true; // false when game is lost
 var growthRate = 0.5;
 var lossFactor = 200; //controls how long it takes to lose
 
@@ -97,14 +97,17 @@ console.log(gl.canvas.width / 2 * 0.9);
 				won = false;
 		}
 
-
-    if(scaleFactor == lossFactor){
-      console.log("lost");
-			gameLost = true;
-			
+		
+   		if(scaleFactor == lossFactor){
+      		console.log("lost");
+			gameLost = false;
 		} 
+		if(won){
+			console.log("won");
+			gameWon = false
+		}
 	
-		if (!gameLost) {
+		if (gameLost && gameWon) {
       console.log("still on");
 			drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
 
