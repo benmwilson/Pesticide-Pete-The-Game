@@ -13,7 +13,9 @@
 </p> 
 
 <p align="center">
-  🚧 This game was developed for the COSC 414 Computer Graphics course at the University of British Columbia Okanagan. 🚧
+  🚧
+ This game was developed for the COSC 414 Computer Graphics course at the University of British Columbia Okanagan.
+  🚧
 </p>
 
 
