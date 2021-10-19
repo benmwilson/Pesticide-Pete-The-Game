@@ -312,12 +312,13 @@ function generateBacteriaColours() {
     min = 0; // colour bounds
 
   for (var i = 0; i < 10; i++) {
-    var red = Math.random() * (max - 0.5) + 0.5;
-    var green = Math.random() * (max - min) + min;
-    var blue = Math.random() * (max - min) + min;
+    var red = (Math.random() * (max - 0.5) + 0.5).toFixed(3);
+    var green = (Math.random() * (max - min) + min).toFixed(3);
+    var blue = (Math.random() * (max - min) + min).toFixed(3);
     var alpha = 1;
 
     bacteriaColours[i] = [red, green, blue, alpha];
+    //console.log(bacteriaColours[i]);
   }
 
   return bacteriaColours;
@@ -346,13 +347,11 @@ function getColor(e) {
 function removeBacteria(r, g, b) {
   x = 0;
   for (var x = 0; x < bacteriaColours.length; x++) {
-
-    bacR = Math.round(lerp(0, 255, bacteriaColours[x][0]));
-    bacG = Math.round(lerp(0, 255, bacteriaColours[x][1]));
-    bacB = Math.round(lerp(0, 255, bacteriaColours[x][2]));
-
-    // console.log("Mouse Color: (" + r + ", " + g + ", " + b + ")");
-    // console.log("Bacteria Color: (" + bacR + ", " + bacG + ", " + bacB + ")");
+    bacR = Math.round(map_range(bacteriaColours[x][0], 0,1, 0,255));
+    bacG = Math.round(map_range(bacteriaColours[x][1], 0,1, 0,255));
+    bacB = Math.round(map_range(bacteriaColours[x][2], 0,1, 0,255));
+    console.log("Mouse Color: (" + r + ", " + g + ", " + b + ")");
+    console.log("Bacteria Color: (" + bacR + ", " + bacG + ", " + bacB + ")");
     if (r == bacR && g == bacG && b == bacB) {
       //console.log("Bacteria hit")
       bacteriaActive[x] = false;
@@ -360,15 +359,13 @@ function removeBacteria(r, g, b) {
   }
 }
 
-
-
 function calculateScore(finishTime) {
   scoreLabel = document.querySelector("#score");
   scoreLabel.innerHTML = "Score: " + Math.floor((1 / finishTime) * 10000);
 }
 
-function lerp(a, b, t) {
-  return (1 - t) * a + t * b;
+function map_range(value, low1, high1, low2, high2) {
+  return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
 
 var m3 = {
