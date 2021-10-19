@@ -22,6 +22,7 @@
 - [Documentation](#documentation)
 - [Contributors](#contributors)
 - [Completed Features](#completed-features)
+  - [Bonus Features](#bonus-features)
 
 ### Contributors
  - [Ben Wilson](https://github.com/benmwilson)
