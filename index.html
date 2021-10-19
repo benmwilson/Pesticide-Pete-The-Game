@@ -1,39 +1,44 @@
 <html>
-  <head>
-    <!-- Import JS Files -->
-    <script type="text/javascript" src="js/game.js"></script>
-    <script type="text/javascript" src="lib/cuon-matrix.js"></script>
-    <script type="text/javascript" src="lib/cuon-utils.js"></script>
-    <script type="text/javascript" src="lib/webgl-debug.js"></script>
-    <script type="text/javascript" src="lib/webgl-utils.js"></script>
 
-    <!-- Link CSS Sheet: -->
-    <link rel="stylesheet" href="css/styles.css" />
+<head>
+  <!-- Import JS Files -->
+  <script type="text/javascript" src="js/game.js"></script>
+  <script type="text/javascript" src="lib/cuon-matrix.js"></script>
+  <script type="text/javascript" src="lib/cuon-utils.js"></script>
+  <script type="text/javascript" src="lib/webgl-debug.js"></script>
+  <script type="text/javascript" src="lib/webgl-utils.js"></script>
 
-    <title>Pesticide Pete: The Game</title>
-  </head>
+  <!-- Link CSS Sheet: -->
+  <link rel="stylesheet" href="css/styles.css" />
 
-  <body onload="initGame();">
-    <div id="gameWrapper" class="container center">
+  <title>Pesticide Pete: The Game</title>
+</head>
+
+<body onload="initGame();">
+  <div id="gameWrapper" class="container center">
+    <div class = "item">
       <h1>Pesticide Pete: The Game</h1>
       <p>
         Instructions: Use your pesticide on the bugs by left clicking them
         before they too big and eat all the corn!
       </p>
-
+    </div>
+    <div class = "item">
       <b id="messages"></b>
       <br>
-      <p>Score:</p>
-      <i id="score"></i><i></i>
-      <button onclick="window.location.reload();">Restart</button>
-      &emsp;&emsp;
-
+      <p><i id="score">Score:</i></p>
+      <p><button onclick="window.location.reload();">Restart</button></p>
       <br>
+    </div>
 
-      <canvas id="gameCanvas" width="500px" height="500px">
+    <div class = "item">
+      <canvas id="gameCanvas">
         Your browser does not appear to support HTML5.
       </canvas>
-      
     </div>
-  </body>
+
+
+  </div>
+</body>
+
 </html>

@@ -47,7 +47,7 @@ var bacteriaScale = 0.01; // initial bacteria size, increased each frame
 // global game states 
 var gameWon = false; // true when game is won
 var gameLost = false; // true when game is lost
-var growthRate = 0.6;
+var growthRate = 0.1;
 
 // player state variables
 var playerScore = 0.0; // player score
@@ -56,6 +56,9 @@ var bacteriaOrigins = []; // store origin coords of each bacteria
 var bacteriaOrigins;
 var bacteriaColours;
 var bacteriaActive;
+
+//Time
+var time = 0;
 
 function initGame() {
 	initWebGLContext();
@@ -93,19 +96,21 @@ function initGame() {
 			if(bacteriaActive[x])
 				won = false;
 		}
-		console.log(scaleFactor)
+
 		if((gl.canvas.width / 2 * 0.9) <= scaleFactor){
 			//gameLost = true;
 			gl.clear(gl.COLOR_BUFFER_BIT);
 			gameLost = true;
 			console.log("Game Lost");
 			growthRate = 0;
+			calculateScore(time);
 		} else if(won){
 			//gameWon == true;
 			gl.clear(gl.COLOR_BUFFER_BIT);
 			gameLost = false;
 			console.log("Game Won");
 			growthRate = 0;
+			calculateScore(time);
 		} else {
 			drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
 
@@ -116,6 +121,7 @@ function initGame() {
 					drawShape(gl.TRIANGLE_FAN, vertices, [bacteriaOrigins[x][0], bacteriaOrigins[x][1]], 0, [scaleFactor, scaleFactor], bacteriaColors[x]);
 			}
 			scaleFactor += growthRate;
+			time += 1;
 			requestAnimationFrame(loop);
 		}
 		
@@ -126,6 +132,7 @@ function initGame() {
 
 function initWebGLContext() {
 	canvas = document.getElementById('gameCanvas');
+	div = document.getElementById('gameWrapper');
 	//gl = getWebGLContext(canvas);
 	gl = canvas.getContext('webgl', { preserveDrawingBuffer: true });
 
@@ -143,6 +150,13 @@ function initWebGLContext() {
 	canvas.width = screenDimension;
 	canvas.height = screenDimension;
 	gl.viewport(0, 0, canvas.width, canvas.height);
+
+	// console.log(div.width);
+	// div.width = window.innerWidth;
+	// console.log(div.width);
+	// canvas.width = div.width;
+	// canvas.height = div.width;
+	// gl.viewport(0, 0, canvas.width, canvas.height);
 }
 
 function initialiazeShaders() {
@@ -299,6 +313,11 @@ function removeBacteria(r, g, b) {
 			bacteriaActive[x] = false;
 		}
 	}
+}
+
+function calculateScore(finishTime){
+	scoreLabel = document.querySelector("#score");
+	scoreLabel.innerHTML = "Score: " + Math.floor(1 / finishTime * 10000);
 }
 
 function lerp(a, b, t) {

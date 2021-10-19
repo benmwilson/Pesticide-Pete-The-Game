@@ -1,5 +1,6 @@
 body {
     margin:0;
+    height: 100%;
    /* overflow:hidden; */
 }
 
@@ -11,7 +12,7 @@ canvas {
 
 .center {
     text-align: center;
-  }
+}
 
   #gameCanvas {
       /* text-align: center; */
