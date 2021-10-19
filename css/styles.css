@@ -12,3 +12,9 @@ canvas {
 .center {
     text-align: center;
   }
+
+  #gameCanvas {
+      /* text-align: center; */
+      /* width: 500px; */
+      /* height: 500px; */
+  }
