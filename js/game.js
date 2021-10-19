@@ -1,5 +1,28 @@
-//Vertex and fragment shader code from 
-//https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
+/*
+
+                                ==============================================
+                                        Pesticide Pete: The Game
+                                      Developed by: Ben Wilson, Nigam Lad,
+                                            and Brendan Zapf
+
+                                        circa winter semester 2021
+                                ==============================================
+
+      ============================================================================================
+        Special thanks to the guys over at gfxfundamentals for writing the webgl-fundamentals 
+        guide that helped us develop some of our shader and matrix code, find a reference below!
+
+                                     Title: webgl-2d-matrices.md
+                                         Author: Greggman
+                                       Date: March 18, 2021
+            Availability: https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
+
+      ============================================================================================
+
+
+
+*/
+
 
 var vertexShaderText = [
 	'attribute vec2 a_position;',
@@ -47,7 +70,7 @@ var bacteriaScale = 0.01; // initial bacteria size, increased each frame
 // global game states 
 var gameWon = false; // true when game is won
 var gameLost = false; // true when game is lost
-var growthRate = 0.1;
+var growthRate = 0.6;
 
 // player state variables
 var playerScore = 0.0; // player score
@@ -197,7 +220,6 @@ function initialiazeShaders() {
 }
 
 function drawShape(type, vertices, translation, rotationDegrees, scale, color) {
-	//Some code referenced from https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
 
 	vertices = new Float32Array(vertices);
 	var n = vertices.length / 2;
@@ -324,7 +346,7 @@ function lerp(a, b, t) {
 }
 
 var m3 = {
-	//Matrix math code from https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
+	
 
 	identity: function () {
 		return [
