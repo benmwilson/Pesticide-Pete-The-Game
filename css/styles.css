@@ -1,9 +1,14 @@
 body {
     margin:0;
-    overflow:hidden;
+   /* overflow:hidden; */
 }
 
 canvas {
     margin:auto;
     display:block;
+    
 }
+
+.center {
+    text-align: center;
+  }
