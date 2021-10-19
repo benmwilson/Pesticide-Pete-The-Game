@@ -99,18 +99,17 @@ function initGame() {
 
 		if((gl.canvas.width / 2 * 0.9) <= scaleFactor){
 			//gameLost = true;
-			gl.clear(gl.COLOR_BUFFER_BIT);
 			gameLost = true;
 			console.log("Game Lost");
 			growthRate = 0;
 			calculateScore(time);
 		} else if(won){
 			//gameWon == true;
-			gl.clear(gl.COLOR_BUFFER_BIT);
 			gameLost = false;
 			console.log("Game Won");
 			growthRate = 0;
 			calculateScore(time);
+			drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
 		} else {
 			drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
 
