@@ -100,6 +100,8 @@ function initGame() {
   //Enable mouseclick
   canvas.addEventListener("click", getColor);
 
+  var l = bacteriaOrigins.length - Math.floor(Math.random() * 10);
+
   var loop = function () {
     gl.clearColor(0, 0.6, 0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -108,7 +110,7 @@ function initGame() {
     //drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
 
     var won = true;
-    for (var x = 0; x < bacteriaActive.length; x++) {
+    for (var x = 0; x < l; x++) {
       if (bacteriaActive[x]) won = false;
     }
 
@@ -146,7 +148,8 @@ function initGame() {
       );
 
       //Draw bacteria
-      for (var x = 0; x < bacteriaOrigins.length; x++) {
+
+      for (var x = 0; x < l; x++) {
         vertices = createCircleVertices(0, 0, 1);
         if (bacteriaActive[x])
           drawShape(
@@ -297,7 +300,7 @@ function generateBacteriaOrigins(radius) {
     var centerX = radius * Math.cos(angle) + origin[0];
     var centerY = radius * Math.sin(angle) + origin[1];
     bacteriaOrigins.push([centerX, centerY]);
-    //console.log("Bacteria #" + (i + 1) + " Origin: X = " + bacteriaOrigins[i][0] + ", Y = " + bacteriaOrigins[i][1]); // print indiv bacteria coord data to console
+    
   }
 
   return bacteriaOrigins;
@@ -343,9 +346,11 @@ function getColor(e) {
 function removeBacteria(r, g, b) {
   x = 0;
   for (var x = 0; x < bacteriaColours.length; x++) {
+
     bacR = Math.round(lerp(0, 255, bacteriaColours[x][0]));
     bacG = Math.round(lerp(0, 255, bacteriaColours[x][1]));
     bacB = Math.round(lerp(0, 255, bacteriaColours[x][2]));
+
     // console.log("Mouse Color: (" + r + ", " + g + ", " + b + ")");
     // console.log("Bacteria Color: (" + bacR + ", " + bacG + ", " + bacB + ")");
     if (r == bacR && g == bacG && b == bacB) {
@@ -354,6 +359,8 @@ function removeBacteria(r, g, b) {
     }
   }
 }
+
+
 
 function calculateScore(finishTime) {
   scoreLabel = document.querySelector("#score");
