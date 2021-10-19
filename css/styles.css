@@ -1,9 +1,20 @@
 body {
     margin:0;
-    overflow:hidden;
+   /* overflow:hidden; */
 }
 
 canvas {
     margin:auto;
     display:block;
+    
 }
+
+.center {
+    text-align: center;
+  }
+
+  #gameCanvas {
+      /* text-align: center; */
+      /* width: 500px; */
+      /* height: 500px; */
+  }

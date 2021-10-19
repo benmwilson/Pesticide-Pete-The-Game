@@ -14,15 +14,26 @@
   </head>
 
   <body onload="initGame();">
-    <div id="gameWrapper" class="container">
-      <canvas
-        id="gameCanvas"
-        
-        width="500px"
-        height="500px"
-      >
+    <div id="gameWrapper" class="container center">
+      <h1>Pesticide Pete: The Game</h1>
+      <p>
+        Instructions: Use your pesticide on the bugs by left clicking them
+        before they too big and eat all the corn!
+      </p>
+
+      <b id="messages"></b>
+      <br>
+      <p>Score:</p>
+      <i id="score"></i><i></i>
+      <button onclick="window.location.reload();">Restart</button>
+      &emsp;&emsp;
+
+      <br>
+
+      <canvas id="gameCanvas" width="500px" height="500px">
         Your browser does not appear to support HTML5.
       </canvas>
+      
     </div>
   </body>
 </html>
