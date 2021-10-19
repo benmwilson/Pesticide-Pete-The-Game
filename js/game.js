@@ -125,7 +125,8 @@ function initGame() {
 			gameLost = true;
 			console.log("Game Lost");
 			growthRate = 0;
-			calculateScore(time);
+			scoreLabel = document.querySelector("#score");
+			scoreLabel.innerHTML = "Score: 0, You Lose!";
 		} else if(won){
 			//gameWon == true;
 			gameLost = false;
