@@ -45,10 +45,9 @@ var currentBacteriaRadius = 0.0; // radius of current bacteria
 var bacteriaScale = 0.01; // initial bacteria size, increased each frame
 
 // global game states 
-var gameWon = true; // false when game is won
-var gameLost = true; // false when game is lost
-var growthRate = 0.5;
-var lossFactor = 200; //controls how long it takes to lose
+var gameWon = false; // true when game is won
+var gameLost = false; // true when game is lost
+var growthRate = 0.6;
 
 // player state variables
 var playerScore = 0.0; // player score
@@ -76,14 +75,12 @@ function initGame() {
 	]
 
 	var gameArea = createCircleVertices(0, 0, (gl.canvas.height / 2) * 0.9);
-  
+
 	var scaleFactor = 10;
 
 	//Enable mouseclick
 	canvas.addEventListener("click", getColor);
 
-console.log(gl.canvas.width / 2 * 0.9);
-  
 	var loop = function () {
 		gl.clearColor(0, 0.6, 0, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
@@ -96,19 +93,20 @@ console.log(gl.canvas.width / 2 * 0.9);
 			if(bacteriaActive[x])
 				won = false;
 		}
-
-		
-   		if(scaleFactor == lossFactor){
-      		console.log("lost");
+		console.log(scaleFactor)
+		if((gl.canvas.width / 2 * 0.9) <= scaleFactor){
+			//gameLost = true;
+			gl.clear(gl.COLOR_BUFFER_BIT);
+			gameLost = true;
+			console.log("Game Lost");
+			growthRate = 0;
+		} else if(won){
+			//gameWon == true;
+			gl.clear(gl.COLOR_BUFFER_BIT);
 			gameLost = false;
-		} 
-		if(won){
-			console.log("won");
-			gameWon = false
-		}
-	
-		if (gameLost && gameWon) {
-      console.log("still on");
+			console.log("Game Won");
+			growthRate = 0;
+		} else {
 			drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
 
 			//Draw bacteria
@@ -118,9 +116,9 @@ console.log(gl.canvas.width / 2 * 0.9);
 					drawShape(gl.TRIANGLE_FAN, vertices, [bacteriaOrigins[x][0], bacteriaOrigins[x][1]], 0, [scaleFactor, scaleFactor], bacteriaColors[x]);
 			}
 			scaleFactor += growthRate;
+			requestAnimationFrame(loop);
 		}
-
-		requestAnimationFrame(loop);
+		
 	}
 	requestAnimationFrame(loop);
 
