@@ -11,11 +11,17 @@
       ============================================================================================
         Special thanks to the guys over at gfxfundamentals for writing the webgl-fundamentals 
         guide that helped us develop some of our shader and matrix code, find a reference below!
+		As well as David Parker for some help with coordinate conversion, find a reference below!
 
                                      Title: webgl-2d-matrices.md
                                          Author: Greggman
                                        Date: March 18, 2021
             Availability: https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
+
+										Title: uiUtils.js 
+                                         Author: David Parker
+                                       Date: December 28, 2018
+            Availability: https://github.com/davidwparker/programmingtil-webgl/blob/master/0033-reading-pixels/libs/uiUtils.js
 
       ============================================================================================
 
