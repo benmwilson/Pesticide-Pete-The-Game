@@ -1,5 +1,28 @@
-//Vertex and fragment shader code from 
-//https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
+/*
+
+                                ==============================================
+                                        Pesticide Pete: The Game
+                                      Developed by: Ben Wilson, Nigam Lad,
+                                            and Brendan Zapf
+                                            
+                                        circa winter semester 2021
+                                ==============================================
+
+      ============================================================================================
+        Special thanks to the guys over at gfxfundamentalsfor writing the webgl-fundamentals 
+        guide that helped us develop some of our shader and matrix code, find a reference below!
+
+                                    Title: webgl-2d-matrices.md
+                                          Author: Greggman
+                                        Date: March 18, 2021
+              Availability: https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
+
+      ============================================================================================
+    
+
+
+*/
+
 
 var vertexShaderText = [
 	'attribute vec2 a_position;',
@@ -96,19 +119,22 @@ console.log(gl.canvas.width / 2 * 0.9);
 			if(bacteriaActive[x])
 				won = false;
 		}
-
-		
-   		if(scaleFactor == lossFactor){
-      		console.log("lost");
+		console.log(scaleFactor)
+		if((gl.canvas.width / 2 * 0.9) <= scaleFactor){
+			//gameLost = true;
+			gl.clear(gl.COLOR_BUFFER_BIT);
+			gameLost = true;
+			console.log("Game Lost");
+      youLose();
+			growthRate = 0;
+		} else if(won){
+			//gameWon == true;
+			gl.clear(gl.COLOR_BUFFER_BIT);
 			gameLost = false;
-		} 
-		if(won){
-			console.log("won");
-			gameWon = false
-		}
-	
-		if (gameLost && gameWon) {
-      console.log("still on");
+			console.log("Game Won");
+      youWin();
+			growthRate = 0;
+		} else {
 			drawShape(gl.TRIANGLE_FAN, gameArea, [gl.canvas.width / 2, gl.canvas.height / 2], 0, [1, 1], [1, 1, 0, 1]);
 
 			//Draw bacteria
@@ -186,7 +212,6 @@ function initialiazeShaders() {
 }
 
 function drawShape(type, vertices, translation, rotationDegrees, scale, color) {
-	//Some code referenced from https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
 
 	vertices = new Float32Array(vertices);
 	var n = vertices.length / 2;
@@ -308,7 +333,6 @@ function lerp(a, b, t) {
 }
 
 var m3 = {
-	//Matrix math code from https://webglfundamentals.org/webgl/lessons/webgl-2d-matrices.html
 
 	identity: function () {
 		return [
@@ -377,16 +401,15 @@ var m3 = {
 	},
 };
 
-// //if every index in vertexArray is NULL, game is won
-// function checkWinStatus() {
-// 	// TODO: Write check to see if all bacteria on the field have been eradicated
-// 	var count = 0;
-// 	for (var i = 0; i < 10; i++) {
-// 		if (vertexArray[i] == NULL) {
-// 			count++
-// 		}
-// 	}
-// 	if (count == 10) {
-// 		gameWon = TRUE;
-// 	}
-// }
+function youWin() {
+  document.getElementById('messages').innerHTML = "<b style='color:green; font-size: 16pt'> Congratulations, You Win! </b> ";
+
+}
+       
+
+function youLose(){
+
+  document.getElementById('messages').innerHTML = "<b style='color:red; font-size: 16pt'> Oh No, You Lose! </b> "
+
+
+}
